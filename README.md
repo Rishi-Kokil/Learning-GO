@@ -28,7 +28,7 @@ module example/hello
 go 1.26.2
 ```
 
-# Writing your first code
+## Writing your first code
 
 - In the `hello` directory, I initialized the `go.mod` file and created a `hello.go` file.
 - I observed that importing packages such as `fmt` requires double quotes (`"fmt"`). Using single quotes throws an error because single quotes are used for `rune literals (Single Chatacters)` in Go, not strings.
@@ -59,7 +59,7 @@ PS C:\hello> go run .
 - If I provide a specific file name (instead of `.`), only that file is run, so this conflict may not appear.
 - Another obervation if you run a file using the go run command and if the func main is not defined then it throws error when you run that file. (# Read about this)
 
-# Call code in an external package
+## Call code in an external package
 
 - When you need your code to do something that might have been implemented by someone else, you can look for a package that has functions you can use in your code.
 
@@ -73,11 +73,13 @@ https://pkg.go.dev/search?q=quote
   ![alt text](image.png)
   You can use the pkg.go.dev site to find published modules whose packages have functions you can use in your own code. Packages are published in modules -- like rsc.io/quote -- where others can use them. Modules are improved with new versions over time, and you can upgrade your code to use the improved versions.
 
-# `go tidy`
+## `go tidy`
 
 - When we imported the rsc.io/quote in our code for the first time it could not resolve the module as it was un aware where it is coming from
 - when we run the `go tidy` command it automatically searched the package repository and adds it to the go.mod file. Basically it adds it as dependency
 - When you ran go mod tidy, it located and downloaded the rsc.io/quote module that contains the package you imported. By default, it downloaded the latest version -- v1.5.2.
+
+
 
 # GO Lang book
 
@@ -239,3 +241,261 @@ There are several ways to declare and initialize variables in Go:
 * **Increments**: `i++` and `i--` are **statements**, not expressions. Therefore, `j = i++` is illegal. `They are also postfix only (`++i` is not allowed).`
 * **Braces**: Braces `{ }` are mandatory for loops, and the opening brace `{` must be on the same line as the `for` or `post` statement.
 * **Comments**: Begin with `//` and continue to the end of the line.
+
+<hr />
+
+# Packages and Modules
+
+## 1. What is a Go Module?
+
+A **module** is a collection of Go packages with a unique identity.
+
+Initialize a module using:
+
+```bash
+go mod init <module-name>
+```
+
+Example:
+
+```bash
+go mod init github.com/your-username/go-basics
+```
+
+### Key Idea:
+
+* Module name is a **global identifier**
+* Used in **import paths**
+* Not the same as package name
+
+---
+
+## 2. Why Module Names Look Like URLs
+
+Example:
+
+```
+github.com/user/project
+example.com/hello
+```
+
+### Reasons:
+
+* Ensures **global uniqueness**
+* Allows Go to **download code from the internet**
+* Maps directly to repository locations
+
+### Symbols Explained:
+
+* `/` → separates module and sub-packages
+* `.` → part of domain naming (no special Go meaning)
+
+---
+
+## 3. Module vs Package (Important Difference)
+
+| Concept | Example                 | Purpose           |
+| ------- | ----------------------- | ----------------- |
+| Module  | github.com/user/project | Global identity   |
+| Package | main, auth, user        | Code organization |
+
+---
+
+## 4. What is a Package?
+
+Defined inside `.go` files:
+
+```go
+package main
+```
+
+or
+
+```go
+package user
+```
+
+### Rules:
+
+* Must be **lowercase**
+* Usually matches **folder name**
+* Should be **short and meaningful**
+
+---
+
+## 5. How Modules and Packages Work Together
+
+### Example Structure:
+
+```
+go-basics/
+  go.mod
+  loops/
+  arrays/
+```
+
+`go.mod`:
+
+```
+module github.com/you/go-basics
+```
+
+Importing a package:
+
+```go
+import "github.com/you/go-basics/loops"
+```
+
+---
+
+## 6. Package Naming Conventions (Production)
+
+### Best Practices:
+
+* Use **lowercase only**
+* Keep names **short**
+* Avoid underscores
+* Match folder name
+
+### Good Examples:
+
+```go
+package user
+package auth
+package config
+```
+
+### Avoid:
+
+```go
+package user_service   // ❌
+package utils          // ❌ too generic
+package mypackage123   // ❌
+```
+
+---
+
+## 7. Common Project Structure
+
+```
+project/
+  go.mod
+  cmd/
+    server/
+      main.go
+  internal/
+    user/
+    auth/
+  pkg/
+    logger/
+```
+
+### Special Folders:
+
+* `cmd/` → entry points
+* `internal/` → private code
+* `pkg/` → reusable code (optional)
+
+---
+
+## 8. Single Module vs Multiple Modules
+
+### Recommended (Single Module):
+
+```
+repo/
+  go.mod
+  loops/
+  arrays/
+```
+
+### Multiple Modules (Advanced):
+
+```
+repo/
+  loops/go.mod
+  arrays/go.mod
+```
+
+### Problems with Multiple Modules:
+
+* Harder versioning
+* Complicated dependencies
+* More tooling complexity
+
+---
+
+## 9. How Go Resolves Imports
+
+When you write:
+
+```go
+import "github.com/you/project/loops"
+```
+
+Go:
+
+1. Reads module path from `go.mod`
+2. Downloads module (if needed)
+3. Locates package inside module
+
+---
+
+## 10. Naming Your Learning Project
+
+### Recommended:
+
+```bash
+go mod init github.com/your-username/go-basics
+```
+
+### Alternatives:
+
+```bash
+go mod init go-basics
+```
+
+Avoid:
+
+```bash
+go mod init myproject123
+```
+
+---
+
+## 11. Key Mental Models
+
+* **Module = Project**
+* **Package = Folder inside project**
+* **Import path = Module + Folder**
+
+---
+
+## 12. Golden Rule
+
+> Clarity > Cleverness
+
+Keep names simple, predictable, and easy to read.
+
+---
+
+## 13. Final Advice
+
+* Use **one module per repo** (especially while learning)
+* Follow **real-world naming conventions**
+* Think about how your code will be **imported and read by others**
+
+---
+
+## Summary
+
+* `go mod init` defines your project identity
+* Package names are local and simple
+* Use domain-style module names
+* Prefer single-module structure
+* Organize code using folders and packages
+
+---
+
+These notes cover the fundamentals of Go modules and package naming conventions.
+
