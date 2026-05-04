@@ -109,6 +109,252 @@ Go is a **compiled language**. The Go toolchain converts source code and its dep
   2.  **Import List**: Other packages needed for the code.
   3.  **Program Declarations**: Functions, variables, etc.
 
+
+# Naming Conventions in Go
+
+## 1. Module Naming
+
+### Recommended Pattern
+
+```
+github.com/<org-or-username>/<repo-name>
+```
+
+### Rules
+
+* Use a **domain-based path** for global uniqueness
+* Prefer **kebab-case** (hyphen-separated) for repo/module names
+* Keep it **short and descriptive**
+
+### Examples
+
+```
+github.com/rahul/go-basics
+github.com/acme/payment-service
+go.opentelemetry.io/otel
+```
+
+### Avoid
+
+```
+github.com/rahul/myProject123   // ❌ mixed case
+github.com/rahul/gobasicsstuff  // ❌ unclear
+github.com/rahul/Go_Basics      // ❌ underscores + caps
+```
+
+---
+
+## 2. Package Naming
+
+### Core Rules
+
+* **Lowercase only**
+* **No underscores or hyphens**
+* **Short, meaningful names**
+* Usually matches the **directory name**
+
+### Good Examples
+
+```go
+package user
+package auth
+package config
+package logger
+```
+
+### Avoid
+
+```go
+package user_service   // ❌ underscore
+package User           // ❌ uppercase
+package utils          // ❌ too generic
+package common         // ❌ vague
+```
+
+### Two-word package names
+
+👉 Use **single lowercase word if possible**
+
+If needed:
+
+* Prefer combining words naturally
+
+Examples:
+
+```go
+package userprofile   // acceptable
+package httpserver    // acceptable
+```
+
+Better approach:
+
+```
+/user/profile   → package profile
+/http/server    → package server
+```
+
+👉 Go prefers **structure over long names**
+
+---
+
+## 3. Directory Naming
+
+### Rules
+
+* Lowercase
+* No spaces
+* Avoid underscores
+* Keep names short
+
+### Examples
+
+```
+/user
+/auth
+/payment
+/config
+```
+
+### For multiple words
+
+👉 Prefer splitting into directories
+
+Instead of:
+
+```
+/user_profile
+```
+
+Use:
+
+```
+/user/profile
+```
+
+---
+
+## 4. File Naming
+
+### Rules
+
+* Lowercase
+* Use underscores if needed (allowed here)
+
+### Examples
+
+```
+user.go
+user_service.go
+http_handler.go
+```
+
+---
+
+## 5. Function & Variable Naming
+
+### Exported (public)
+
+* Start with **Capital letter**
+
+```go
+func GetUser()
+var AppConfig
+```
+
+### Unexported (private)
+
+* Start with **lowercase**
+
+```go
+func getUser()
+var appConfig
+```
+
+### Two-word names
+
+👉 Use **camelCase / PascalCase**
+
+```go
+getUserName()     // private
+GetUserName()     // public
+userID            // common style (ID not Id)
+```
+
+---
+
+## 6. Constants Naming
+
+### Rules
+
+* Use camelCase or PascalCase
+* Avoid screaming snake case
+
+```go
+const maxRetries = 3
+const DefaultTimeout = 30
+```
+
+Avoid:
+
+```go
+const MAX_RETRIES = 3  // ❌ not Go style
+```
+
+---
+
+## 7. Interface Naming
+
+### Convention
+
+* Often end with `-er`
+
+```go
+type Reader interface {}
+type Writer interface {}
+type Stringer interface {}
+```
+
+---
+
+## 8. Avoid Stutter in Names
+
+Bad:
+
+```go
+package user
+
+func user.GetUser() // ❌ stutter
+```
+
+Good:
+
+```go
+package user
+
+func Get() // ✅ cleaner
+```
+
+---
+
+## 9. Summary Rules
+
+* Module → kebab-case (with domain)
+* Package → lowercase, single word preferred
+* Directory → lowercase, simple
+* File → lowercase, underscores allowed
+* Functions → camelCase / PascalCase
+* Exported → Capitalized
+* Prefer **clarity over cleverness**
+
+---
+
+## Golden Principle
+
+> Use simple, predictable, and readable names. Let folder structure do the heavy lifting instead of long names.
+
+
+--
+
 ### The Entry Point
 
 `Read the program hello/hello.go`
@@ -479,23 +725,129 @@ Keep names simple, predictable, and easy to read.
 
 ---
 
-## 13. Final Advice
+## 13. Note 
 
 * Use **one module per repo** (especially while learning)
 * Follow **real-world naming conventions**
 * Think about how your code will be **imported and read by others**
 
 ---
+## Names in Go
 
-## Summary
+Names for functions, variables, constants, types, labels, and packages follow specific rules that determine their behavior and visibility.
 
-* `go mod init` defines your project identity
-* Package names are local and simple
-* Use domain-style module names
-* Prefer single-module structure
-* Organize code using folders and packages
+### Naming Rules
+* **Format**: A name must begin with a **letter** (Unicode) or an **underscore**. It can be followed by any number of letters, digits, and underscores.
+* **Case Sensitivity**: Case matters. `heapSort` and `Heapsort` are distinct names.
+* **Keywords**: There are **25 reserved keywords** that cannot be used as names:
+  `break`, `default`, `func`, `interface`, `select`, `case`, `defer`, `go`, `map`, `struct`, `chan`, `else`, `goto`, `package`, `switch`, `const`, `fallthrough`, `if`, `range`, `type`, `continue`, `for`, `import`, `return`, `var`.
+
+### Predeclared Names
+Go has several dozen **predeclared names** for built-in constants, types, and functions. These are **not reserved** (you can redeclare them), but doing so is generally discouraged to avoid confusion.
+* **Constants**: `true`, `false`, `iota`, `nil`.
+* **Types**: `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `float32`, `float64`, `bool`, `byte`, `rune`, `string`, `error`, etc.
+* **Functions**: `make`, `len`, `cap`, `new`, `append`, `copy`, `close`, `delete`, `panic`, `recover`, etc.
 
 ---
 
-These notes cover the fundamentals of Go modules and package naming conventions.
+### Scope and Visibility
+The visibility of a name is determined by where it is declared and the **case of its first letter**:
 
+* **Local**: Declared within a function; only visible inside that function.
+* **Package-level**: Declared outside a function; visible in all files within that package.
+* **Exported**: If a name begins with an **upper-case letter**, it is exported. This means it is accessible to other packages (e.g., `fmt.Printf`).
+* **Unexported**: If a name begins with a **lower-case letter**, it is not visible outside its own package.
+* **Package Names**: These are always written in **lower case**.
+
+---
+
+## Program Structure: Declarations, Variables, and Scope
+
+### 2.2 Declarations
+A declaration names a program entity and specifies its properties. There are four major kinds:
+* **`var`**: Variables
+* **`const`**: Constants
+* **`type`**: Types
+* **`func`**: Functions
+
+**Structure of a `.go` file:**
+1.  **Package declaration** (identifies the package).
+2.  **Import declarations** (dependencies).
+3.  **Package-level declarations** (visible across all files in the package).
+
+---
+
+### 2.3 Variables
+The general form of a variable declaration is:  
+`var name type = expression`
+
+* **Type or Expression omission**: You can omit the `type` (inferred from the initializer) or the `expression` (initializes to the **Zero Value**).
+* **Zero Value**: Go ensures every variable has a well-defined value. 
+    * `0` for numbers.
+    * `false` for booleans.
+    * `""` for strings.
+    * `nil` for interfaces, slices, pointers, maps, channels, and functions.
+* **Multiple declarations**: `var i, j, k int` or `var b, f, s = true, 2.3, "four"`.
+
+#### Short Variable Declarations (`:=`)
+Used for the majority of local variables within functions.
+* **Syntax**: `name := expression`
+* **Shadowing**: A short declaration can act as an assignment to existing variables in the same block, provided at least one new variable is being declared.
+* **Note**: `:=` is a declaration; `=` is an assignment.
+
+---
+
+### 2.3.2 Pointers
+A **pointer** value is the **address** of a variable.
+* **`&x`**: The "address-of" operator. Yields a pointer to the variable `x`.
+* **`*p`**: The "dereference" operator. Yields the value of the variable the pointer `p` points to.
+* **Addressability**: Every variable has an address; not every value (like a literal constant) does.
+* **Safety**: It is safe for a function to return the address of a local variable. Go's compiler manages this via **Escape Analysis**.
+
+
+
+---
+
+### 2.3.3 The `new` Function
+`new(T)` creates an **unnamed variable** of type `T`, initializes it to the zero value of `T`, and returns its address (`*T`).
+* It is a syntactic convenience: `new(int)` is equivalent to declaring a dummy `int` variable and taking its address.
+
+---
+
+### 2.3.4 Lifetime of Variables
+* **Package-level variables**: Exist for the entire execution of the program.
+* **Local variables**: Have dynamic lifetimes. They are created when the declaration is executed and live until they become **unreachable** (garbage collected).
+* **Escape Analysis**: If a local variable is still reachable after its function returns (e.g., its address was assigned to a global pointer), it is said to "escape" and is allocated on the **heap** instead of the **stack**.
+
+---
+
+### 2.4 Assignments
+* **Tuple Assignment**: Allows assigning multiple values at once (e.g., `x, y = y, x` to swap).
+* **Assignability**: A value can be assigned to a variable only if its type matches exactly (with some flexibility for constants and interfaces).
+
+---
+
+### 2.5 Type Declarations
+A type declaration defines a new **named type** with the same underlying type as an existing one.  
+`type name underlying-type`
+
+* **Purpose**: To separate different/incompatible uses of the same underlying type (e.g., `Celsius` vs `Fahrenheit` both being `float64`).
+* **Conversions**: `Celsius(f)` changes the type, not the value. It makes the change of meaning explicit.
+* **Methods**: You can associate functions (methods) with named types to define specific behaviors.
+
+---
+
+### 2.6 Packages and Initialization
+* **Exported Names**: Identifiers starting with an **upper-case letter** are visible outside their package.
+* **`init` Functions**: Any file can contain `init()` functions. They are executed automatically when the program starts, after package-level variables are initialized.
+* **Initialization Order**: Dependencies are resolved first. If package `A` imports `B`, `B` is fully initialized before `A`.
+
+---
+
+### 2.7 Scope
+Scope is a **compile-time** property defining where a name is visible.
+* **Lexical Blocks**: Scopes are defined by blocks (universe, package, file, function, etc.).
+* **Shadowing**: An inner declaration can "hide" an outer one if they share the same name.
+* **Implicit Blocks**: Constructs like `if`, `for`, and `switch` create implicit blocks for variables declared in their initialization headers.
+
+> **Common Pitfall**: Using `:=` in an inner block (like an `init` function) can accidentally shadow a package-level variable instead of updating it.

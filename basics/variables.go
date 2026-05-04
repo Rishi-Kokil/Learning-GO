@@ -82,6 +82,9 @@ func VariableDemo() {
 	//Slice
 	slice := []int{4, 5, 6}
 
+	// Testing Array Declaration
+	// tempArray := {10, 23, 20} // This will throw an error because we need to specify the type and size of the array
+
 	// Map
 	m := map[string]int{
 		"one": 1,
