@@ -9,15 +9,15 @@ func LoopsDemo() {
 	
 	// Structure of this for loop
 	// for initialization, condition, termination {}
-	for i:= 0, i < 5: i++ {
+	for i:= 0; i < 5; i++ {
 		fmt.Println(i)
 	}
 
 	// While style For loop
-	i := 0
-	for i < 5 {
-		fmt.Println(i)
-		i++;
+	a := 0
+	for a < 5 {
+		fmt.Println(a)
+		a++;
 	}
 
 	// Infinite Loop
@@ -37,7 +37,7 @@ func LoopsDemo() {
 		if k == 3 {
 			continue
 		}
-		fmt.Println(i)
+		fmt.Println(k)
 		k++;
 	}
 
@@ -53,5 +53,26 @@ func LoopsDemo() {
 			fmt.Printf("i: %d, j: %d\n", i, j)
 		}
 	}
+
+	// Iterating over a Map
+
+	tempMap := map[string]int {
+		"one": 1,
+		"two": 2,
+		"three": 3,
+		"four": 4,
+		"five": 5
+	}
+
+	for key , value := range tempmap {
+		fmt.Printf("Key: %s, Value: %d\n", key, value)
+	} 
+
+	// Alternate way to access the value is map[key], similar to the way we access Array elements
+	for key := range tempMap {
+		fmt.Printf("Key: %s, Value: %d\n", key, tempMap[key])
+	}
+
+	
 
 }

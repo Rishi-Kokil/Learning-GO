@@ -79,7 +79,7 @@ func VariableDemo() {
 	//Array
 	var arr [3]int = [3]int{1, 2, 3}
 
-	//Slice
+	//Slice : Slice is a dynamically sized array, it does not have a fixed size like an array, and it can grow and shrink as needed
 	slice := []int{4, 5, 6}
 
 	// Testing Array Declaration
@@ -90,6 +90,9 @@ func VariableDemo() {
 		"one": 1,
 		"two": 2,
 	}
+
+	// Accessing Map values
+	fmt.Println(m["one"]) // This will print the value associated with the key "one", which is 1
 
 	type Person struct {
 		Name string
